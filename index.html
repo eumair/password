@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Password Generator</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@500&display=swap');
+
+  /* COLORS */
+  :root {
+    --bg-black: #000000;
+    --gray-dark: #222222;
+    --gray-medium: #555555;
+    --gray-light: #bbbbbb;
+    --pink-red: #ff2e63;
+    --pink-red-dark: #bf244b;
+    --white-light: #eeeeee;
+  }
+
+  /* RESET & BASE */
+  * {
+    box-sizing: border-box;
+  }
+  body {
+    margin: 0; padding: 20px;
+    background: var(--bg-black);
+    font-family: 'Poppins', sans-serif;
+    color: var(--gray-light);
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 100vh;
+  }
+
+  .container {
+    background: var(--gray-dark);
+    border-radius: 14px;
+    max-width: 400px;
+    width: 100%;
+    padding: 28px 24px;
+    //box-shadow:
+      0 8px 18px var(--pink-red-dark);
+  }
+
+  h1 {
+    font-weight: 600;
+    font-size: 26px;
+    margin-bottom: 28px;
+    text-align: center;
+    color: var(--pink-red);
+    //text-shadow: 0 0 8px var(--pink-red-dark);
+    user-select: none;
+  }
+
+  label {
+    display: block;
+    font-size: 14px;
+    margin-bottom: 6px;
+    color: var(--pink-red-dark);
+    user-select: none;
+  }
+
+  input[type="text"],
+  input[type="number"],
+  select {
+    width: 100%;
+    padding: 14px 16px;
+    font-size: 16px;
+    border-radius: 100px;
+    border: 2px solid var(--gray-medium);
+    background: var(--gray-dark);
+    color: var(--white-light);
+    //box-shadow: inset 0 0 8px var(--gray-medium);
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    user-select: text;
+  }
+  input[type="text"]:focus,
+  input[type="number"]:focus,
+  select:focus {
+    outline: none;
+    border-color: var(--pink-red);
+    //box-shadow: 0 0 14px var(--pink-red);
+    background: #2c2c2c;
+    color: var(--white-light);
+  }
+
+  .dob-group {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  .dob-group .input-group {
+    flex: 1;
+  }
+
+  .input-group {
+    margin-bottom: 20px;
+  }
+
+  .checkbox-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  .checkbox-group input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    accent-color: gray;
+    cursor: pointer;
+  }
+  .checkbox-group label {
+    font-weight: 600;
+    color: var(--pink-red);
+    cursor: pointer;
+    user-select: none;
+  }
+
+  button {
+    width: 100%;
+    padding: 16px;
+    border-radius: 100px;
+    border: none;
+    font-size: 18px;
+    font-weight: 700;
+    background: var(--pink-red);
+    color: var(--bg-black);
+    cursor: pointer;
+    //box-shadow:
+      0 8px 18px var(--pink-red-dark);
+    transition: background 0.3s ease, //box-shadow 0.3s ease;
+    user-select: none;
+  }
+  button:hover {
+    background: var(--pink-red-dark);
+    //box-shadow:
+      0 10px 24px var(--pink-red);
+  }
+
+  .actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 20px;
+  }
+  .actions button {
+    flex: 1;
+    background: var(--pink-red-dark);
+    color: var(--white-light);
+    font-weight: 700;
+    //box-shadow: 0 6px 18px var(--pink-red-dark);
+    padding: 12px;
+    border-radius: 100px;
+    transition: background 0.3s ease;
+  }
+  .actions button:hover {
+    background: var(--pink-red);
+    //box-shadow: 0 8px 20px var(--pink-red);
+  }
+
+  pre.output {
+    margin-top: 22px;
+    background: var(--bg-black);
+    border-radius: 14px;
+    padding: 20px;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 16px;
+    color: var(--pink-red);
+    min-height: 140px;
+    white-space: pre-wrap;
+    //box-shadow: inset 0 0 20px var(--pink-red-dark);
+    user-select: all;
+    overflow-x: auto;
+  }
+
+  .strength-meter {
+    height: 8px;
+    border-radius: 100px;
+    background: var(--gray-medium);
+    overflow: hidden;
+    margin-bottom: 20px;
+    //box-shadow: inset 0 0 10px var(--gray-dark);
+  }
+  .strength-meter > div {
+    height: 100%;
+    width: 0%;
+    background: var(--pink-red);
+    transition: width 0.4s ease;
+    //box-shadow: 0 0 14px var(--pink-red-dark);
+  }
+
+  @media (max-width: 420px) {
+    body {
+      padding: 16px 14px;
+    }
+    .container {
+      padding: 26px 20px;
+    }
+    h1 {
+      font-size: 22px;
+      margin-bottom: 22px;
+    }
+    input[type="text"],
+    input[type="number"],
+    select {
+      font-size: 15px;
+      padding: 12px 14px;
+    }
+    button {
+      font-size: 16px;
+      padding: 14px 0;
+    }
+    .actions button {
+      padding: 10px 0;
+    }
+  }
+</style>
+</head>
+<body>
+  <main class="container" role="main" aria-label="Password Generator Form">
+    <h1>Password Generator</h1>
+
+    <div class="input-group">
+      <label for="firstName">First Name</label>
+      <input type="text" id="firstName" autocomplete="off" aria-label="First Name" />
+    </div>
+
+    <div class="input-group">
+      <label for="lastName">Last Name</label>
+      <input type="text" id="lastName" autocomplete="off" aria-label="Last Name" />
+    </div>
+
+    <div class="dob-group" aria-label="Date of Birth inputs">
+      <div class="input-group">
+        <label for="dobDay">Day</label>
+        <input type="number" id="dobDay" min="1" max="31" autocomplete="off" aria-label="Day" placeholder="DD" />
+      </div>
+      <div class="input-group">
+        <label for="dobMonth">Month</label>
+        <input type="number" id="dobMonth" min="1" max="12" autocomplete="off" aria-label="Month" placeholder="MM" />
+      </div>
+      <div class="input-group">
+        <label for="dobYear">Year</label>
+        <input type="number" id="dobYear" min="1000" max="9999" autocomplete="off" aria-label="Year" placeholder="YYYY" />
+      </div>
+    </div>
+
+    <div class="input-group">
+      <label for="address">Address</label>
+      <input type="text" id="address" autocomplete="off" aria-label="Address" />
+    </div>
+
+    <div class="input-group">
+      <label for="petName">Pet Name</label>
+      <input type="text" id="petName" autocomplete="off" aria-label="Pet Name" />
+    </div>
+
+    <div class="input-group">
+      <label for="partnerName">Partner Name</label>
+      <input type="text" id="partnerName" autocomplete="off" aria-label="Partner Name" />
+    </div>
+
+    <div class="input-group">
+      <label for="favColor">Favorite Color</label>
+      <input type="text" id="favColor" autocomplete="off" aria-label="Favorite Color" />
+    </div>
+
+    <div class="input-group">
+      <label for="phone">Phone Number</label>
+      <input type="text" id="phone" autocomplete="off" aria-label="Phone Number" />
+    </div>
+
+    <div class="checkbox-group">
+      <input type="checkbox" id="includeSpecial" />
+      <label for="includeSpecial">- Include Special Characters</label>
+    </div>
+
+    <div class="input-group">
+      <label for="customSpecial">Custom Special Characters (no letters/digits)</label>
+      <input type="text" id="customSpecial" maxlength="10" placeholder="@#&*!" aria-label="Custom Special Characters" />
+    </div>
+
+    <div class="input-group">
+      <label for="passwordLength">Password Length (2 - 12)</label>
+      <input type="number" id="passwordLength" min="2" max="12" value="8" aria-label="Password Length" />
+    </div>
+
+    <div class="input-group">
+      <label for="passwordCount">Number of Passwords</label>
+      <select id="passwordCount" aria-label="Number of Passwords">
+        <option value="5">5</option>
+        <option value="10" selected>10</option>
+        <option value="15">15</option>
+        <option value="20">20</option>
+        <option value="25">25</option>
+        <option value="30">30</option>
+        <option value="40">40</option>
+        <option value="50">50</option>
+      </select>
+    </div>
+
+    <button id="generateBtn" aria-label="Generate Passwords">Generate Passwords</button>
+<br>
+<br>
+    <div class="strength-meter" aria-label="Password strength meter">
+      <div id="strengthBar"></div>
+    </div>
+
+    <pre id="result" class="output" aria-live="polite" aria-atomic="true"></pre>
+
+    <div class="actions">
+      <button id="copyBtn" aria-label="Copy passwords to clipboard">Copy</button>
+      <button id="downloadBtn" aria-label="Download passwords as file">Download</button>
+    </div>
+  </main>
+
+<script>
+  // Capitalize first letter helper
+  function capitalize(str) {
+    return str ? str.charAt(0).toUpperCase() + str.slice(1) : '';
+  }
+
+  // Extract DOB parts with last 3 digits for year
+  function getDOBParts() {
+    const dayRaw = document.getElementById('dobDay').value.trim();
+    const monthRaw = document.getElementById('dobMonth').value.trim();
+    const yearRaw = document.getElementById('dobYear').value.trim();
+
+    const day = dayRaw ? dayRaw.padStart(2, '0') : '';
+    const month = monthRaw ? monthRaw.padStart(2, '0') : '';
+    let year = yearRaw ? yearRaw.slice(-3) : '';
+
+    return { day, month, year };
+  }
+
+  // Validate custom special chars: no letters or digits
+  function validateSpecialChars(chars) {
+    return /^[^a-zA-Z0-9]+$/.test(chars);
+  }
+
+  // Mix parts randomly
+  function mixParts(parts) {
+    for (let i = parts.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [parts[i], parts[j]] = [parts[j], parts[i]];
+    }
+    return parts.join('');
+  }
+
+  function generatePasswords() {
+    const firstName = capitalize(document.getElementById('firstName').value.trim());
+    const lastName = capitalize(document.getElementById('lastName').value.trim());
+    const address = capitalize(document.getElementById('address').value.trim());
+    const petName = capitalize(document.getElementById('petName').value.trim());
+    const partnerName = capitalize(document.getElementById('partnerName').value.trim());
+    const favColor = capitalize(document.getElementById('favColor').value.trim());
+    const phone = document.getElementById('phone').value.trim();
+
+    const { day, month, year } = getDOBParts();
+
+    const passwordCount = +document.getElementById('passwordCount').value;
+    let passwordLength = +document.getElementById('passwordLength').value;
+
+    const includeSpecial = document.getElementById('includeSpecial').checked;
+    const customSpecial = document.getElementById('customSpecial').value.trim();
+
+    if (customSpecial && !validateSpecialChars(customSpecial)) {
+      alert('Custom special characters must NOT contain letters or digits.');
+      return;
+    }
+
+    const baseSpecial = '!@#$%^&*()-_=+[]{}|;:,.<>?/`~';
+    const specialChars = customSpecial || (includeSpecial ? baseSpecial : '');
+
+    // Gather parts
+    const partsPool = [
+      firstName, lastName, address, petName, partnerName, favColor,
+      day, month, year, phone
+    ].filter(Boolean);
+
+    if (partsPool.length === 0) {
+      alert('Please fill at least one input to generate passwords.');
+      return;
+    }
+
+    // Generate passwords
+    const passwords = [];
+    for (let i = 0; i < passwordCount; i++) {
+      let baseStr = mixParts(partsPool);
+
+      if (specialChars.length > 0) {
+        const specialsCount = Math.min(Math.floor(passwordLength / 4), specialChars.length);
+        for (let s = 0; s < specialsCount; s++) {
+          const pos = Math.floor(Math.random() * (baseStr.length + 1));
+          const specialChar = specialChars[Math.floor(Math.random() * specialChars.length)];
+          baseStr = baseStr.slice(0, pos) + specialChar + baseStr.slice(pos);
+        }
+      }
+
+      if (baseStr.length > passwordLength) {
+        baseStr = baseStr.slice(0, passwordLength);
+      } else {
+        const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        while (baseStr.length < passwordLength) {
+          baseStr += chars[Math.floor(Math.random() * chars.length)];
+        }
+      }
+      passwords.push(baseStr);
+    }
+
+    const result = document.getElementById('result');
+    result.textContent = passwords.join('\n');
+
+    const strengthBar = document.getElementById('strengthBar');
+    let strength = Math.min(passwordLength * 8, 100);
+    if (specialChars.length > 0) strength += 10;
+    strength = Math.min(strength, 100);
+    strengthBar.style.width = strength + '%';
+  }
+
+  // Copy to clipboard
+  document.getElementById('copyBtn').addEventListener('click', () => {
+    const result = document.getElementById('result');
+    if (!result.textContent.trim()) {
+      alert('No passwords to copy. Generate first.');
+      return;
+    }
+    navigator.clipboard.writeText(result.textContent)
+      .then(() => alert('Passwords copied!'))
+      .catch(() => alert('Copy failed, try manually.'));
+  });
+
+  // Download passwords as .txt
+  document.getElementById('downloadBtn').addEventListener('click', () => {
+    const result = document.getElementById('result');
+    if (!result.textContent.trim()) {
+      alert('No passwords to download. Generate first.');
+      return;
+    }
+    const blob = new Blob([result.textContent], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'passwords.txt';
+    a.click();
+    URL.revokeObjectURL(url);
+  });
+
+  document.getElementById('generateBtn').addEventListener('click', generatePasswords);
+</script>
+</body>
+</html>
