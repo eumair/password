@@ -5,8 +5,6 @@
 - `Family Members Name`
 - `Relationship`
 - `Special Characters`
-> Developed By : **UmAir.**
+> Developed By — **UmAir.**
 
-> Use The Tool :
-
- *https://eumair.github.io/password/*
+> **Use The Tool :** **[`PASSWORD GENERATOR`](https://eumair.github.io/password/)**
